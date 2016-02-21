@@ -15,7 +15,7 @@ typealias Keycode = Int32
 typealias KeyFlags = Int32
 typealias KeyRepeat = Int32
 
-struct KeyEvent {
+public struct KeyEvent {
     let keycode: Keycode
     let keyFlags: KeyFlags
     let keyPressed: Bool     // Will be true after a keyDown and false after a keyUp

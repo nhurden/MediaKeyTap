@@ -8,7 +8,7 @@
 
 import Cocoa
 
-enum MediaKey {
+public enum MediaKey {
     case PlayPause
     case Previous
     case Next
@@ -16,13 +16,13 @@ enum MediaKey {
     case FastForward
 }
 
-enum KeyPressMode {
+public enum KeyPressMode {
     case KeyDown
     case KeyUp
     case KeyDownAndUp
 }
 
-protocol MediaKeyTapDelegate {
+public protocol MediaKeyTapDelegate {
     func handleMediaKey(mediaKey: MediaKey, withEvent event: KeyEvent)
 }
 
@@ -42,7 +42,7 @@ public class MediaKeyTap {
 
     // MARK: - Setup
 
-    init(delegate: MediaKeyTapDelegate, on mode: KeyPressMode = .KeyDown) {
+    public init(delegate: MediaKeyTapDelegate, on mode: KeyPressMode = .KeyDown) {
         self.delegate = delegate
         self.interceptMediaKeys = false
         self.mediaApplicationWatcher = MediaApplicationWatcher()
