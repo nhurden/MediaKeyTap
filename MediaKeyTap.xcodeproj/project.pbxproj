@@ -344,6 +344,7 @@
 				E18A87DD1C7A200900825AE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

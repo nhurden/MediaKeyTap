@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: MediaKeyTapDelegate {
-    func handleMediaKey(mediaKey: MediaKey, withEvent: KeyEvent) {
+    func handleMediaKey(mediaKey: MediaKey, event: KeyEvent) {
         switch mediaKey {
         case .PlayPause:
             print("Play/pause pressed")
