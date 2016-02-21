@@ -14,6 +14,16 @@
 		E18A87E51C7A204200825AE3 /* MediaKeyTapInternals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87E11C7A204200825AE3 /* MediaKeyTapInternals.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E18A88051C7A237C00825AE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E18A88011C7A237B00825AE3 /* MediaKeyTapExample.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E18A87EF1C7A237B00825AE3;
+			remoteInfo = MediaKeyTapExample;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		E18A87D31C7A200900825AE3 /* MediaKeyTap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MediaKeyTap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E18A87D61C7A200900825AE3 /* MediaKeyTap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaKeyTap.h; sourceTree = "<group>"; };
@@ -22,6 +32,7 @@
 		E18A87DF1C7A204200825AE3 /* MediaApplicationWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaApplicationWatcher.swift; sourceTree = "<group>"; };
 		E18A87E01C7A204200825AE3 /* MediaKeyTap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyTap.swift; sourceTree = "<group>"; };
 		E18A87E11C7A204200825AE3 /* MediaKeyTapInternals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyTapInternals.swift; sourceTree = "<group>"; };
+		E18A88011C7A237B00825AE3 /* MediaKeyTapExample.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MediaKeyTapExample.xcodeproj; path = MediaKeyTapExample/MediaKeyTapExample.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +49,7 @@
 		E18A87C91C7A200900825AE3 = {
 			isa = PBXGroup;
 			children = (
+				E18A88011C7A237B00825AE3 /* MediaKeyTapExample.xcodeproj */,
 				E18A87D51C7A200900825AE3 /* MediaKeyTap */,
 				E18A87D41C7A200900825AE3 /* Products */,
 			);
@@ -62,6 +74,14 @@
 				E18A87D81C7A200900825AE3 /* Info.plist */,
 			);
 			path = MediaKeyTap;
+			sourceTree = "<group>";
+		};
+		E18A88021C7A237B00825AE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E18A88061C7A237C00825AE3 /* MediaKeyTapExample.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,12 +140,28 @@
 			mainGroup = E18A87C91C7A200900825AE3;
 			productRefGroup = E18A87D41C7A200900825AE3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = E18A88021C7A237B00825AE3 /* Products */;
+					ProjectRef = E18A88011C7A237B00825AE3 /* MediaKeyTapExample.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				E18A87D21C7A200900825AE3 /* MediaKeyTap */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		E18A88061C7A237C00825AE3 /* MediaKeyTapExample.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = MediaKeyTapExample.app;
+			remoteRef = E18A88051C7A237C00825AE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E18A87D11C7A200900825AE3 /* Resources */ = {
