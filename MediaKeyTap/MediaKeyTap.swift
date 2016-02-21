@@ -23,7 +23,7 @@ public enum KeyPressMode {
 }
 
 public protocol MediaKeyTapDelegate {
-    func handleMediaKey(mediaKey: MediaKey, withEvent event: KeyEvent)
+    func handleMediaKey(mediaKey: MediaKey, event: KeyEvent)
 }
 
 public class MediaKeyTap {
@@ -95,7 +95,7 @@ extension MediaKeyTap: MediaKeyTapInternalsDelegate {
     func handleKeyEvent(event: KeyEvent) {
         if let key = keycodeToMediaKey(event.keycode) {
             if shouldNotifyDelegate(event) {
-                delegate.handleMediaKey(key, withEvent: event)
+                delegate.handleMediaKey(key, event: event)
             }
         }
     }
