@@ -8,12 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		E18A87D71C7A200900825AE3 /* MediaKeyTap.h in Headers */ = {isa = PBXBuildFile; fileRef = E18A87D61C7A200900825AE3 /* MediaKeyTap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E18A87E21C7A204200825AE3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87DE1C7A204200825AE3 /* Extensions.swift */; };
+		E18A87E31C7A204200825AE3 /* MediaApplicationWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87DF1C7A204200825AE3 /* MediaApplicationWatcher.swift */; };
+		E18A87E41C7A204200825AE3 /* MediaKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87E01C7A204200825AE3 /* MediaKeyTap.swift */; };
+		E18A87E51C7A204200825AE3 /* MediaKeyTapInternals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87E11C7A204200825AE3 /* MediaKeyTapInternals.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E18A87D31C7A200900825AE3 /* MediaKeyTap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MediaKeyTap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E18A87D61C7A200900825AE3 /* MediaKeyTap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaKeyTap.h; sourceTree = "<group>"; };
 		E18A87D81C7A200900825AE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E18A87DE1C7A204200825AE3 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		E18A87DF1C7A204200825AE3 /* MediaApplicationWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaApplicationWatcher.swift; sourceTree = "<group>"; };
+		E18A87E01C7A204200825AE3 /* MediaKeyTap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyTap.swift; sourceTree = "<group>"; };
+		E18A87E11C7A204200825AE3 /* MediaKeyTapInternals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeyTapInternals.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +54,10 @@
 		E18A87D51C7A200900825AE3 /* MediaKeyTap */ = {
 			isa = PBXGroup;
 			children = (
+				E18A87E01C7A204200825AE3 /* MediaKeyTap.swift */,
+				E18A87DF1C7A204200825AE3 /* MediaApplicationWatcher.swift */,
+				E18A87E11C7A204200825AE3 /* MediaKeyTapInternals.swift */,
+				E18A87DE1C7A204200825AE3 /* Extensions.swift */,
 				E18A87D61C7A200900825AE3 /* MediaKeyTap.h */,
 				E18A87D81C7A200900825AE3 /* Info.plist */,
 			);
@@ -130,6 +142,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E18A87E41C7A204200825AE3 /* MediaKeyTap.swift in Sources */,
+				E18A87E31C7A204200825AE3 /* MediaApplicationWatcher.swift in Sources */,
+				E18A87E21C7A204200825AE3 /* Extensions.swift in Sources */,
+				E18A87E51C7A204200825AE3 /* MediaKeyTapInternals.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +241,7 @@
 		E18A87DC1C7A200900825AE3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -237,12 +254,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nhurden.MediaKeyTap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		E18A87DD1C7A200900825AE3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
