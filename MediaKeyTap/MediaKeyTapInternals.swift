@@ -11,15 +11,15 @@
 import Cocoa
 import CoreGraphics
 
-typealias Keycode = Int32
-typealias KeyFlags = Int32
-typealias KeyRepeat = Int32
+public typealias Keycode = Int32
+public typealias KeyFlags = Int32
+public typealias KeyRepeat = Int32
 
 public struct KeyEvent {
-    let keycode: Keycode
-    let keyFlags: KeyFlags
-    let keyPressed: Bool     // Will be true after a keyDown and false after a keyUp
-    let keyRepeat: KeyRepeat
+    public let keycode: Keycode
+    public let keyFlags: KeyFlags
+    public let keyPressed: Bool     // Will be true after a keyDown and false after a keyUp
+    public let keyRepeat: KeyRepeat
 }
 
 protocol MediaKeyTapInternalsDelegate {
