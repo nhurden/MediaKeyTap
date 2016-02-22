@@ -1,7 +1,7 @@
-# MediaKeyTap.swift
+# MediaKeyTap
 
 `MediaKeyTap` provides an API for accessing the Mac's media keys (play/pause, next and previous) in your Swift application.
-The `MediaKeyTap` will only capture key events when it is the most recently activated media application, matching the behaviour of
+`MediaKeyTap` will only capture key events when it is the most recently activated media application, matching the behaviour of
 existing applications, including those using `SPMediaKeyTap`.
 
 ## Usage
