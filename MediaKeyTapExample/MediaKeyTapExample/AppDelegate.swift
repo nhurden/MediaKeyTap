@@ -26,8 +26,10 @@ extension AppDelegate: MediaKeyTapDelegate {
             print("Play/pause pressed")
         case .Previous, .Rewind:
             print("Previous pressed")
+            print("Repeat: \(event.keyRepeat)")
         case .Next, .FastForward:
             print("Next pressed")
+            print("Repeat: \(event.keyRepeat)")
         }
     }
 }

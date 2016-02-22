@@ -138,7 +138,7 @@ class MediaKeyTapInternals {
         let keycode = extractKeyCode(event)
         let keyFlags = KeyFlags(event.data1 & 0x0000ffff)
         let keyPressed = ((keyFlags & 0xff00) >> 8) == 0xa
-        let keyRepeat = keyFlags & 0x1
+        let keyRepeat = (keyFlags & 0x1) == 0x1
 
         return KeyEvent(keycode: keycode, keyFlags: keyFlags, keyPressed: keyPressed, keyRepeat: keyRepeat)
     }
