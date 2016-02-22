@@ -18,8 +18,15 @@ class MediaApplicationWatcher {
     var mediaApps: [NSRunningApplication]
     var delegate: MediaApplicationWatcherDelegate?
 
+    // A set of bundle identifiers that notifications have been received from
+    var dynamicWhitelist: Set<String>
+
+    let mediaKeyTapDidStartNotification = "MediaKeyTapDidStart" // Sent on start()
+    let mediaKeyTapReplyNotification = "MediaKeyTapReply" // Sent on receipt of a mediaKeyTapDidStartNotification
+
     init() {
         self.mediaApps = []
+        self.dynamicWhitelist = []
     }
 
     deinit {
@@ -38,6 +45,35 @@ class MediaApplicationWatcher {
             selector: "applicationTerminated:",
             name: NSWorkspaceDidTerminateApplicationNotification,
             object: nil)
+
+        setupDistributedNotifications()
+    }
+
+    func setupDistributedNotifications() {
+        let distributedNotificationCenter = NSDistributedNotificationCenter.defaultCenter()
+
+        // Notify any other apps using this library using a distributed notification
+        // deliverImmediately is needed to ensure that backgrounded apps can resign the
+        // media tap immediately when new media apps are launched
+        let ownBundleIdentifier = NSBundle.mainBundle().bundleIdentifier
+        distributedNotificationCenter.postNotificationName(mediaKeyTapDidStartNotification, object: ownBundleIdentifier, userInfo: nil, deliverImmediately: true)
+
+        distributedNotificationCenter.addObserverForName(mediaKeyTapDidStartNotification, object: nil, queue: nil) { notification in
+            if let otherBundleIdentifier = notification.object as? String {
+                print("Saw new bundle identifier: \(otherBundleIdentifier)")
+                self.dynamicWhitelist.insert(otherBundleIdentifier)
+
+                // Send a reply so that the sender knows that this app exists
+                distributedNotificationCenter.postNotificationName(self.mediaKeyTapReplyNotification, object: ownBundleIdentifier, userInfo: nil, deliverImmediately: true)
+            }
+        }
+
+        distributedNotificationCenter.addObserverForName(mediaKeyTapReplyNotification, object: nil, queue: nil) { notification in
+            if let otherBundleIdentifier = notification.object as? String {
+                print("Received reply from \(otherBundleIdentifier)")
+                self.dynamicWhitelist.insert(otherBundleIdentifier)
+            }
+        }
     }
 
     // MARK: - Notifications
@@ -70,7 +106,7 @@ class MediaApplicationWatcher {
 
     // MARK: - Identifier Whitelist
 
-    // The SPMediaKeyTap whitelist
+    // The static SPMediaKeyTap whitelist
     func whitelistedApplicationIdentifiers() -> [String] {
         var whitelist = [
             "at.justp.Theremin",
@@ -117,6 +153,7 @@ class MediaApplicationWatcher {
     private func whitelisted(application: NSRunningApplication) -> Bool {
         if let bundleIdentifier = application.bundleIdentifier {
             return whitelistedApplicationIdentifiers().contains(bundleIdentifier)
+                || dynamicWhitelist.contains(bundleIdentifier)
         } else {
             return false
         }
