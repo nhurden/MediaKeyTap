@@ -57,3 +57,7 @@ The MediaKeyTap initialiser allows the keypress behaviour to be specified:
 Add `pod 'MediaKeyTap'` to your `Podfile` and run `pod install`.
 
 Then `import MediaKeyTap`.
+
+### Carthage
+
+Add `github "nhurden/MediaKeyTap"` to your `Cartfile` and run `carthage update`.
