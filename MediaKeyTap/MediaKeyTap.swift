@@ -22,6 +22,17 @@ public enum KeyPressMode {
     case KeyDownAndUp
 }
 
+public typealias Keycode = Int32
+public typealias KeyFlags = Int32
+public typealias KeyRepeat = Int32
+
+public struct KeyEvent {
+    public let keycode: Keycode
+    public let keyFlags: KeyFlags
+    public let keyPressed: Bool     // Will be true after a keyDown and false after a keyUp
+    public let keyRepeat: KeyRepeat
+}
+
 public protocol MediaKeyTapDelegate {
     func handleMediaKey(mediaKey: MediaKey, event: KeyEvent)
 }
