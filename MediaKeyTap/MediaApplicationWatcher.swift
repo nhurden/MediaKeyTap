@@ -60,6 +60,8 @@ class MediaApplicationWatcher {
 
         distributedNotificationCenter.addObserverForName(mediaKeyTapDidStartNotification, object: nil, queue: nil) { notification in
             if let otherBundleIdentifier = notification.object as? String {
+                guard otherBundleIdentifier != ownBundleIdentifier else { return }
+
                 print("Saw new bundle identifier: \(otherBundleIdentifier)")
                 self.dynamicWhitelist.insert(otherBundleIdentifier)
 
@@ -70,6 +72,8 @@ class MediaApplicationWatcher {
 
         distributedNotificationCenter.addObserverForName(mediaKeyTapReplyNotification, object: nil, queue: nil) { notification in
             if let otherBundleIdentifier = notification.object as? String {
+                guard otherBundleIdentifier != ownBundleIdentifier else { return }
+                
                 print("Received reply from \(otherBundleIdentifier)")
                 self.dynamicWhitelist.insert(otherBundleIdentifier)
             }
