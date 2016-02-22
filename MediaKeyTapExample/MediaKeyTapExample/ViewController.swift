@@ -52,7 +52,7 @@ extension ViewController: MediaKeyTapDelegate {
             print("Next pressed")
             toggleLabel(nextLabel, enabled: event.keyPressed)
         case .FastForward:
-            print("Fast Forward Pressed")
+            print("Fast Forward pressed")
             toggleLabel(fastForwardLabel, enabled: event.keyPressed)
         }
     }
