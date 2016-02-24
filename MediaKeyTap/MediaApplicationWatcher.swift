@@ -68,8 +68,6 @@ class MediaApplicationWatcher {
         distributedNotificationCenter.addObserverForName(mediaKeyTapDidStartNotification, object: nil, queue: nil) { notification in
             if let otherBundleIdentifier = notification.object as? String {
                 guard otherBundleIdentifier != ownBundleIdentifier else { return }
-
-                print("Saw new bundle identifier: \(otherBundleIdentifier)")
                 self.dynamicWhitelist.insert(otherBundleIdentifier)
 
                 // Send a reply so that the sender knows that this app exists
@@ -80,8 +78,6 @@ class MediaApplicationWatcher {
         distributedNotificationCenter.addObserverForName(mediaKeyTapReplyNotification, object: nil, queue: nil) { notification in
             if let otherBundleIdentifier = notification.object as? String {
                 guard otherBundleIdentifier != ownBundleIdentifier else { return }
-
-                print("Received reply from \(otherBundleIdentifier)")
                 self.dynamicWhitelist.insert(otherBundleIdentifier)
             }
         }
@@ -93,7 +89,6 @@ class MediaApplicationWatcher {
         if let application = notification.userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
             if inStaticWhitelist(application) && application != NSRunningApplication.currentApplication() {
                 delegate?.whitelistedAppStarted()
-                print("Whitelisted application started: \(application.bundleIdentifier)")
             }
         }
     }
