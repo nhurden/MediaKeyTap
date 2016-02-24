@@ -126,8 +126,8 @@ class MediaApplicationWatcher {
     // MARK: - Identifier Whitelist
 
     // The static SPMediaKeyTap whitelist
-    func whitelistedApplicationIdentifiers() -> [String] {
-        var whitelist = [
+    func whitelistedApplicationIdentifiers() -> Set<String> {
+        var whitelist: Set<String> = [
             "at.justp.Theremin",
             "co.rackit.mate",
             "com.Timenut.SongKey",
@@ -163,7 +163,7 @@ class MediaApplicationWatcher {
         ]
 
         if let ownIdentifier = NSBundle.mainBundle().bundleIdentifier {
-            whitelist.append(ownIdentifier)
+            whitelist.insert(ownIdentifier)
         }
 
         return whitelist
