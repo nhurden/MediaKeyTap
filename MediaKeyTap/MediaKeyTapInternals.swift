@@ -43,7 +43,14 @@ class MediaKeyTapInternals {
         }
     }
 
-    func startWatchingMediaKeys() {
+    func restartTap() {
+        print("Restarting Media Key Tap")
+
+        stopWatchingMediaKeys()
+        startWatchingMediaKeys(restart: true)
+    }
+
+    func startWatchingMediaKeys(restart restart: Bool = false) {
         let eventTapCallback: EventTapCallback = { proxy, type, event in
             if type == .TapDisabledByTimeout {
                 if let port = self.keyEventPort {
@@ -73,17 +80,21 @@ class MediaKeyTapInternals {
             return event
         }
 
-        startKeyEventTapWithCallback(eventTapCallback)
+        startKeyEventTapWithCallback(eventTapCallback, restart: restart)
         callback = eventTapCallback
     }
 
     func stopWatchingMediaKeys() {
+        CFRunLoopSourceInvalidate <^> runLoopSource
         CFRunLoopStop <^> runLoop
         CFMachPortInvalidate <^> keyEventPort
     }
 
-    private func startKeyEventTapWithCallback(callback: EventTapCallback) {
-        delegate?.updateInterceptMediaKeys(true)
+    private func startKeyEventTapWithCallback(callback: EventTapCallback, restart: Bool) {
+        // On a restart we don't want to interfere with the application watcher
+        if !restart {
+            delegate?.updateInterceptMediaKeys(true)
+        }
 
         keyEventPort = keyCaptureEventTapPortWithCallback(callback)
 

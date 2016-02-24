@@ -95,6 +95,12 @@ extension MediaKeyTap: MediaApplicationWatcherDelegate {
     func updateIsActiveMediaApp(active: Bool) {
         interceptMediaKeys = active
     }
+
+    // When a static whitelisted app starts, we need to restart the tap to ensure that
+    // the dynamic whitelist is not overridden by the other app
+    func whitelistedAppStarted() {
+        internals.restartTap()
+    }
 }
 
 extension MediaKeyTap: MediaKeyTapInternalsDelegate {
