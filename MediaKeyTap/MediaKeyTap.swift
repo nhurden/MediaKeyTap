@@ -65,7 +65,12 @@ public class MediaKeyTap {
         mediaApplicationWatcher.start()
 
         internals.delegate = self
-        internals.startWatchingMediaKeys()
+        do {
+            try internals.startWatchingMediaKeys()
+        } catch let error as EventTapError {
+            mediaApplicationWatcher.stop()
+            print(error.description)
+        } catch {}
     }
 
     private func keycodeToMediaKey(keycode: Keycode) -> MediaKey? {
@@ -99,7 +104,12 @@ extension MediaKeyTap: MediaApplicationWatcherDelegate {
     // When a static whitelisted app starts, we need to restart the tap to ensure that
     // the dynamic whitelist is not overridden by the other app
     func whitelistedAppStarted() {
-        internals.restartTap()
+        do {
+            try internals.restartTap()
+        } catch let error as EventTapError {
+            mediaApplicationWatcher.stop()
+            print(error.description)
+        } catch {}
     }
 }
 

@@ -31,7 +31,7 @@ class MediaApplicationWatcher {
     }
 
     deinit {
-        NSWorkspace.sharedWorkspace().notificationCenter.removeObserver(self)
+        stop()
     }
 
     func start() {
@@ -53,6 +53,10 @@ class MediaApplicationWatcher {
             object: nil)
 
         setupDistributedNotifications()
+    }
+
+    func stop() {
+        NSWorkspace.sharedWorkspace().notificationCenter.removeObserver(self)
     }
 
     func setupDistributedNotifications() {

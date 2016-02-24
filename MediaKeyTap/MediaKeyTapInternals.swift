@@ -11,6 +11,20 @@
 import Cocoa
 import CoreGraphics
 
+enum EventTapError: ErrorType {
+    case EventTapCreationFailure
+    case RunLoopSourceCreationFailure
+}
+
+extension EventTapError: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .EventTapCreationFailure: return "Event tap creation failed: is your application sandboxed?"
+        case .RunLoopSourceCreationFailure: return "Runloop source creation failed"
+        }
+    }
+}
+
 protocol MediaKeyTapInternalsDelegate {
     func updateInterceptMediaKeys(intercept: Bool)
     func handleKeyEvent(event: KeyEvent)
@@ -43,14 +57,13 @@ class MediaKeyTapInternals {
         }
     }
 
-    func restartTap() {
-        print("Restarting Media Key Tap")
-
+    func restartTap() throws {
         stopWatchingMediaKeys()
-        startWatchingMediaKeys(restart: true)
+
+        try startWatchingMediaKeys(restart: true)
     }
 
-    func startWatchingMediaKeys(restart restart: Bool = false) {
+    func startWatchingMediaKeys(restart restart: Bool = false) throws {
         let eventTapCallback: EventTapCallback = { proxy, type, event in
             if type == .TapDisabledByTimeout {
                 if let port = self.keyEventPort {
@@ -80,7 +93,7 @@ class MediaKeyTapInternals {
             return event
         }
 
-        startKeyEventTapWithCallback(eventTapCallback, restart: restart)
+        try startKeyEventTapWithCallback(eventTapCallback, restart: restart)
         callback = eventTapCallback
     }
 
@@ -90,7 +103,7 @@ class MediaKeyTapInternals {
         CFMachPortInvalidate <^> keyEventPort
     }
 
-    private func startKeyEventTapWithCallback(callback: EventTapCallback, restart: Bool) {
+    private func startKeyEventTapWithCallback(callback: EventTapCallback, restart: Bool) throws {
         // On a restart we don't want to interfere with the application watcher
         if !restart {
             delegate?.updateInterceptMediaKeys(true)
@@ -98,17 +111,11 @@ class MediaKeyTapInternals {
 
         keyEventPort = keyCaptureEventTapPortWithCallback(callback)
 
-        guard let port = keyEventPort else {
-            print("Global event tap unavailable")
-            return
-        }
+        guard let port = keyEventPort else { throw EventTapError.EventTapCreationFailure }
 
         runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorSystemDefault, port, 0)
 
-        guard let source = runLoopSource else {
-            print("Failed to create event tap runloop source")
-            return
-        }
+        guard let source = runLoopSource else { throw EventTapError.RunLoopSourceCreationFailure }
 
         let queue = dispatch_queue_create("MediaKeyTap Runloop", DISPATCH_QUEUE_SERIAL)
         self.runLoopQueue = queue
