@@ -13,7 +13,6 @@
 		E18A87E41C7A204200825AE3 /* MediaKeyTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87E01C7A204200825AE3 /* MediaKeyTap.swift */; };
 		E18A87E51C7A204200825AE3 /* MediaKeyTapInternals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87E11C7A204200825AE3 /* MediaKeyTapInternals.swift */; };
 		E18A880C1C7A25B000825AE3 /* MediaKeyTap.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E18A88091C7A25B000825AE3 /* MediaKeyTap.podspec */; };
-		E18A880D1C7A25B000825AE3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = E18A880A1C7A25B000825AE3 /* README.md */; };
 		E18A880E1C7A25B000825AE3 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E18A880B1C7A25B000825AE3 /* LICENSE */; };
 /* End PBXBuildFile section */
 
@@ -191,9 +190,8 @@
 			files = (
 				E18A87E41C7A204200825AE3 /* MediaKeyTap.swift in Sources */,
 				E18A87E31C7A204200825AE3 /* MediaApplicationWatcher.swift in Sources */,
-				E18A880D1C7A25B000825AE3 /* README.md in Sources */,
-				E18A87E21C7A204200825AE3 /* Extensions.swift in Sources */,
 				E18A87E51C7A204200825AE3 /* MediaKeyTapInternals.swift in Sources */,
+				E18A87E21C7A204200825AE3 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
