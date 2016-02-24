@@ -170,19 +170,11 @@ class MediaApplicationWatcher {
     }
 
     private func inStaticWhitelist(application: NSRunningApplication) -> Bool {
-        if let bundleIdentifier = application.bundleIdentifier {
-            return whitelistedApplicationIdentifiers().contains(bundleIdentifier)
-        } else {
-            return false
-        }
+        return (whitelistedApplicationIdentifiers().contains <^> application.bundleIdentifier) ?? false
     }
 
     private func inDynamicWhitelist(application: NSRunningApplication) -> Bool {
-        if let bundleIdentifier = application.bundleIdentifier {
-            return dynamicWhitelist.contains(bundleIdentifier)
-        } else {
-            return false
-        }
+        return (dynamicWhitelist.contains <^> application.bundleIdentifier) ?? false
     }
 
     private func whitelisted(application: NSRunningApplication) -> Bool {
