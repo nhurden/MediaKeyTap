@@ -38,19 +38,19 @@ class MediaApplicationWatcher {
         let notificationCenter = NSWorkspace.sharedWorkspace().notificationCenter
 
         notificationCenter.addObserver(self,
-            selector: "applicationLaunched:",
-            name: NSWorkspaceDidLaunchApplicationNotification,
-            object: nil)
+                                       selector: #selector(applicationLaunched),
+                                       name: NSWorkspaceDidLaunchApplicationNotification,
+                                       object: nil)
 
         notificationCenter.addObserver(self,
-            selector: "applicationActivated:",
-            name: NSWorkspaceDidActivateApplicationNotification,
-            object: nil)
+                                       selector: #selector(applicationActivated),
+                                       name: NSWorkspaceDidActivateApplicationNotification,
+                                       object: nil)
 
         notificationCenter.addObserver(self,
-            selector: "applicationTerminated:",
-            name: NSWorkspaceDidTerminateApplicationNotification,
-            object: nil)
+                                       selector: #selector(applicationTerminated),
+                                       name: NSWorkspaceDidTerminateApplicationNotification,
+                                       object: nil)
 
         setupDistributedNotifications()
     }
