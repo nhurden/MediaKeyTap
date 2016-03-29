@@ -4,7 +4,7 @@
 `MediaKeyTap` will only capture key events when it is the most recently activated media application, matching the behaviour of
 existing applications, such as those using `SPMediaKeyTap`.
 
-`MediaKeyTap` builds its whitelist by combining the static whitelist from `SPMediaTap` with a dynamic whitelist built
+`MediaKeyTap` builds its whitelist by combining the static whitelist from `SPMediaKeyTap` with a dynamic whitelist built
 at runtime using `NSDistributedNotificationCenter`. If you create a new application using this library, you should not
 need to add your bundle identifier to the whitelist.
 
