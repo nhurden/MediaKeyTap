@@ -29,13 +29,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 and implement `MediaKeyTapDelegate`'s 1 method:
 ```swift
-func handleMediaKey(mediaKey: MediaKey, event: KeyEvent) {
+func handle(mediaKey: MediaKey, event: KeyEvent) {
     switch mediaKey {
-    case .PlayPause:
+    case .playPause:
         print("Play/pause pressed")
-    case .Previous, .Rewind:
+    case .previous, .rewind:
         print("Previous pressed")
-    case .Next, .FastForward:
+    case .next, .fastForward:
         print("Next pressed")
     }
 }
