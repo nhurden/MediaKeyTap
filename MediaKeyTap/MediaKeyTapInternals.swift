@@ -92,12 +92,12 @@ class MediaKeyTapInternals {
     fileprivate func handle(event: CGEvent, ofType type: CGEventType) -> CGEvent? {
         if let nsEvent = NSEvent(cgEvent: event) {
             guard type.rawValue == UInt32(NX_SYSDEFINED)
-                && isMediaKeyEvent(nsEvent)
+                && nsEvent.isMediaKeyEvent
                 && delegate?.isInterceptingMediaKeys() ?? false
             else { return event }
 
             DispatchQueue.main.async {
-                self.delegate?.handle(keyEvent: self.toKeyEvent(nsEvent))
+                self.delegate?.handle(keyEvent: nsEvent.keyEvent)
             }
 
             return nil
@@ -143,28 +143,5 @@ class MediaKeyTapInternals {
             eventsOfInterest: CGEventMask(1 << NX_SYSDEFINED),
             callback: cCallback,
             userInfo: refcon)
-    }
-
-    fileprivate func isKeyEvent(_ event: NSEvent) -> Bool {
-        return event.subtype.rawValue == 8
-    }
-
-    fileprivate func extractKeyCode(_ event: NSEvent) -> Keycode {
-        return Keycode((event.data1 & 0xffff0000) >> 16)
-    }
-
-    fileprivate func toKeyEvent(_ event: NSEvent) -> KeyEvent {
-        let keycode = extractKeyCode(event)
-        let keyFlags = KeyFlags(event.data1 & 0x0000ffff)
-        let keyPressed = ((keyFlags & 0xff00) >> 8) == 0xa
-        let keyRepeat = (keyFlags & 0x1) == 0x1
-
-        return KeyEvent(keycode: keycode, keyFlags: keyFlags, keyPressed: keyPressed, keyRepeat: keyRepeat)
-    }
-
-    fileprivate func isMediaKeyEvent(_ event: NSEvent) -> Bool {
-        let keycode = extractKeyCode(event)
-        return isKeyEvent(event)
-            && [NX_KEYTYPE_PLAY, NX_KEYTYPE_PREVIOUS, NX_KEYTYPE_NEXT, NX_KEYTYPE_FAST, NX_KEYTYPE_REWIND].contains(keycode)
     }
 }
