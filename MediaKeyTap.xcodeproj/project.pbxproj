@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E11463B21D9BAE8400A854EE /* NSEventExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11463B11D9BAE8400A854EE /* NSEventExtensions.swift */; };
+		E11463B51D9BB34900A854EE /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = E11463B41D9BB34900A854EE /* CHANGELOG.md */; };
 		E18A87D71C7A200900825AE3 /* MediaKeyTap.h in Headers */ = {isa = PBXBuildFile; fileRef = E18A87D61C7A200900825AE3 /* MediaKeyTap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E18A87E21C7A204200825AE3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87DE1C7A204200825AE3 /* Extensions.swift */; };
 		E18A87E31C7A204200825AE3 /* MediaApplicationWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18A87DF1C7A204200825AE3 /* MediaApplicationWatcher.swift */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		E11463B11D9BAE8400A854EE /* NSEventExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSEventExtensions.swift; sourceTree = "<group>"; };
+		E11463B41D9BB34900A854EE /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		E18A87D31C7A200900825AE3 /* MediaKeyTap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MediaKeyTap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E18A87D61C7A200900825AE3 /* MediaKeyTap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaKeyTap.h; sourceTree = "<group>"; };
 		E18A87D81C7A200900825AE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 				E18A88091C7A25B000825AE3 /* MediaKeyTap.podspec */,
 				E18A880A1C7A25B000825AE3 /* README.md */,
 				E18A880B1C7A25B000825AE3 /* LICENSE */,
+				E11463B41D9BB34900A854EE /* CHANGELOG.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -182,6 +185,7 @@
 			files = (
 				E18A880E1C7A25B000825AE3 /* LICENSE in Resources */,
 				E18A880C1C7A25B000825AE3 /* MediaKeyTap.podspec in Resources */,
+				E11463B51D9BB34900A854EE /* CHANGELOG.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
