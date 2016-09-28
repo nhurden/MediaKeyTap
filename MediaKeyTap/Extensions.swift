@@ -8,10 +8,12 @@
 
 import Foundation
 
-infix operator <^> {
-    precedence 130
-    associativity left
+precedencegroup FunctorPrecedence {
+    associativity: left
+    higherThan: DefaultPrecedence
 }
+
+infix operator <^> : FunctorPrecedence
 
 func <^><T, U>(f: (T) -> U, ap: T?) -> U? {
     return ap.map(f)
