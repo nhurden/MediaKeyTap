@@ -9,17 +9,17 @@
 import Cocoa
 
 public enum MediaKey {
-    case PlayPause
-    case Previous
-    case Next
-    case Rewind
-    case FastForward
+    case playPause
+    case previous
+    case next
+    case rewind
+    case fastForward
 }
 
 public enum KeyPressMode {
-    case KeyDown
-    case KeyUp
-    case KeyDownAndUp
+    case keyDown
+    case keyUp
+    case keyDownAndUp
 }
 
 public typealias Keycode = Int32
@@ -33,7 +33,7 @@ public struct KeyEvent {
 }
 
 public protocol MediaKeyTapDelegate {
-    func handleMediaKey(mediaKey: MediaKey, event: KeyEvent)
+    func handle(mediaKey: MediaKey, event: KeyEvent)
 }
 
 public class MediaKeyTap {
@@ -52,7 +52,7 @@ public class MediaKeyTap {
 
     // MARK: - Setup
 
-    public init(delegate: MediaKeyTapDelegate, on mode: KeyPressMode = .KeyDown) {
+    public init(delegate: MediaKeyTapDelegate, on mode: KeyPressMode = .keyDown) {
         self.delegate = delegate
         self.interceptMediaKeys = false
         self.mediaApplicationWatcher = MediaApplicationWatcher()
@@ -60,7 +60,7 @@ public class MediaKeyTap {
         self.keyPressMode = mode
     }
 
-    public func start() {
+    open func start() {
         mediaApplicationWatcher.delegate = self
         mediaApplicationWatcher.start()
 
@@ -73,31 +73,31 @@ public class MediaKeyTap {
         } catch {}
     }
 
-    private func keycodeToMediaKey(keycode: Keycode) -> MediaKey? {
+    fileprivate func keycodeToMediaKey(_ keycode: Keycode) -> MediaKey? {
         switch keycode {
-        case NX_KEYTYPE_PLAY: return .PlayPause
-        case NX_KEYTYPE_PREVIOUS: return .Previous
-        case NX_KEYTYPE_NEXT: return .Next
-        case NX_KEYTYPE_REWIND: return .Rewind
-        case NX_KEYTYPE_FAST: return .FastForward
+        case NX_KEYTYPE_PLAY: return .playPause
+        case NX_KEYTYPE_PREVIOUS: return .previous
+        case NX_KEYTYPE_NEXT: return .next
+        case NX_KEYTYPE_REWIND: return .rewind
+        case NX_KEYTYPE_FAST: return .fastForward
         default: return nil
         }
     }
 
-    private func shouldNotifyDelegate(event: KeyEvent) -> Bool {
+    fileprivate func shouldNotifyDelegate(_ event: KeyEvent) -> Bool {
         switch keyPressMode {
-        case .KeyDown:
+        case .keyDown:
             return event.keyPressed
-        case .KeyUp:
+        case .keyUp:
             return !event.keyPressed
-        case .KeyDownAndUp:
+        case .keyDownAndUp:
             return true
         }
     }
 }
 
 extension MediaKeyTap: MediaApplicationWatcherDelegate {
-    func updateIsActiveMediaApp(active: Bool) {
+    func updateIsActiveMediaApp(_ active: Bool) {
         interceptMediaKeys = active
     }
 
@@ -114,14 +114,14 @@ extension MediaKeyTap: MediaApplicationWatcherDelegate {
 }
 
 extension MediaKeyTap: MediaKeyTapInternalsDelegate {
-    func updateInterceptMediaKeys(intercept: Bool) {
+    func updateInterceptMediaKeys(_ intercept: Bool) {
         interceptMediaKeys = intercept
     }
 
-    func handleKeyEvent(event: KeyEvent) {
-        if let key = keycodeToMediaKey(event.keycode) {
-            if shouldNotifyDelegate(event) {
-                delegate.handleMediaKey(key, event: event)
+    func handle(keyEvent: KeyEvent) {
+        if let key = keycodeToMediaKey(keyEvent.keycode) {
+            if shouldNotifyDelegate(keyEvent) {
+                delegate.handle(mediaKey: key, event: keyEvent)
             }
         }
     }

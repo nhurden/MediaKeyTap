@@ -21,37 +21,31 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mediaKeyTap = MediaKeyTap(delegate: self, on: .KeyDownAndUp)
+        mediaKeyTap = MediaKeyTap(delegate: self, on: .keyDownAndUp)
         mediaKeyTap?.start()
     }
 
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
-
-    func toggleLabel(label: NSTextField, enabled: Bool) {
-        label.textColor = enabled ? NSColor.greenColor() : NSColor.textColor()
+    func toggleLabel(_ label: NSTextField, enabled: Bool) {
+        label.textColor = enabled ? NSColor.green : NSColor.textColor
     }
 }
 
 extension ViewController: MediaKeyTapDelegate {
-    func handleMediaKey(mediaKey: MediaKey, event: KeyEvent) {
+    func handle(mediaKey: MediaKey, event: KeyEvent) {
         switch mediaKey {
-        case .PlayPause:
+        case .playPause:
             print("Play/pause pressed")
             toggleLabel(playPauseLabel, enabled: event.keyPressed)
-        case .Previous:
+        case .previous:
             print("Previous pressed")
             toggleLabel(previousLabel, enabled: event.keyPressed)
-        case .Rewind:
+        case .rewind:
             print("Rewind pressed")
             toggleLabel(rewindLabel, enabled: event.keyPressed)
-        case .Next:
+        case .next:
             print("Next pressed")
             toggleLabel(nextLabel, enabled: event.keyPressed)
-        case .FastForward:
+        case .fastForward:
             print("Fast Forward pressed")
             toggleLabel(fastForwardLabel, enabled: event.keyPressed)
         }

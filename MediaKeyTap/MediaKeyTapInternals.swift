@@ -11,23 +11,23 @@
 import Cocoa
 import CoreGraphics
 
-enum EventTapError: ErrorType {
-    case EventTapCreationFailure
-    case RunLoopSourceCreationFailure
+enum EventTapError: Error {
+    case eventTapCreationFailure
+    case runLoopSourceCreationFailure
 }
 
 extension EventTapError: CustomStringConvertible {
     var description: String {
         switch self {
-        case .EventTapCreationFailure: return "Event tap creation failed: is your application sandboxed?"
-        case .RunLoopSourceCreationFailure: return "Runloop source creation failed"
+        case .eventTapCreationFailure: return "Event tap creation failed: is your application sandboxed?"
+        case .runLoopSourceCreationFailure: return "Runloop source creation failed"
         }
     }
 }
 
 protocol MediaKeyTapInternalsDelegate {
-    func updateInterceptMediaKeys(intercept: Bool)
-    func handleKeyEvent(event: KeyEvent)
+    func updateInterceptMediaKeys(_ intercept: Bool)
+    func handle(keyEvent: KeyEvent)
     func isInterceptingMediaKeys() -> Bool
 }
 
@@ -36,10 +36,10 @@ class MediaKeyTapInternals {
 
     var delegate: MediaKeyTapInternalsDelegate?
     var keyEventPort: CFMachPort?
-    var runLoopSource: CFRunLoopSourceRef?
+    var runLoopSource: CFRunLoopSource?
     var callback: EventTapCallback?
-    var runLoopQueue: dispatch_queue_t?
-    var runLoop: CFRunLoopRef?
+    var runLoopQueue: DispatchQueue?
+    var runLoop: CFRunLoop?
 
     deinit {
         stopWatchingMediaKeys()
@@ -48,10 +48,10 @@ class MediaKeyTapInternals {
     /**
         Enable/Disable the underlying tap
     */
-    func enableTap(onOff: Bool) {
-        if let port = self.keyEventPort, runLoop = self.runLoop {
-            CFRunLoopPerformBlock(runLoop, kCFRunLoopCommonModes) {
-                CGEventTapEnable(port, onOff)
+    func enableTap(_ onOff: Bool) {
+        if let port = self.keyEventPort, let runLoop = self.runLoop {
+            CFRunLoopPerformBlock(runLoop, CFRunLoopMode.commonModes as CFTypeRef!) {
+                CGEvent.tapEnable(tap: port, enable: onOff)
             }
             CFRunLoopWakeUp(runLoop)
         }
@@ -65,14 +65,14 @@ class MediaKeyTapInternals {
         try startWatchingMediaKeys(restart: true)
     }
 
-    func startWatchingMediaKeys(restart restart: Bool = false) throws {
+    func startWatchingMediaKeys(restart: Bool = false) throws {
         let eventTapCallback: EventTapCallback = { type, event in
-            if type == .TapDisabledByTimeout {
+            if type == .tapDisabledByTimeout {
                 if let port = self.keyEventPort {
-                    CGEventTapEnable(port, true)
+                    CGEvent.tapEnable(tap: port, enable: true)
                 }
                 return event
-            } else if type == .TapDisabledByUserInput {
+            } else if type == .tapDisabledByUserInput {
                 return event
             }
 
@@ -89,15 +89,15 @@ class MediaKeyTapInternals {
         CFMachPortInvalidate <^> keyEventPort
     }
 
-    private func handleEvent(event: CGEvent, ofType type: CGEventType) -> CGEvent? {
-        if let nsEvent = NSEvent(CGEvent: event) {
+    fileprivate func handleEvent(_ event: CGEvent, ofType type: CGEventType) -> CGEvent? {
+        if let nsEvent = NSEvent(cgEvent: event) {
             guard type.rawValue == UInt32(NX_SYSDEFINED)
                 && isMediaKeyEvent(nsEvent)
                 && delegate?.isInterceptingMediaKeys() ?? false
             else { return event }
 
-            dispatch_async(dispatch_get_main_queue()) {
-                self.delegate?.handleKeyEvent(self.toKeyEvent(nsEvent))
+            DispatchQueue.main.async {
+                self.delegate?.handle(keyEvent: self.toKeyEvent(nsEvent))
             }
 
             return nil
@@ -106,54 +106,54 @@ class MediaKeyTapInternals {
         return event
     }
 
-    private func startKeyEventTapWithCallback(callback: EventTapCallback, restart: Bool) throws {
+    fileprivate func startKeyEventTapWithCallback(_ callback: EventTapCallback, restart: Bool) throws {
         // On a restart we don't want to interfere with the application watcher
         if !restart {
             delegate?.updateInterceptMediaKeys(true)
         }
 
         keyEventPort = keyCaptureEventTapPortWithCallback(callback)
-        guard let port = keyEventPort else { throw EventTapError.EventTapCreationFailure }
+        guard let port = keyEventPort else { throw EventTapError.eventTapCreationFailure }
 
         runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorSystemDefault, port, 0)
-        guard let source = runLoopSource else { throw EventTapError.RunLoopSourceCreationFailure }
+        guard let source = runLoopSource else { throw EventTapError.runLoopSourceCreationFailure }
 
-        let queue = dispatch_queue_create("MediaKeyTap Runloop", DISPATCH_QUEUE_SERIAL)
+        let queue = DispatchQueue(label: "MediaKeyTap Runloop", attributes: [])
         self.runLoopQueue = queue
 
-        dispatch_async(queue) {
+        queue.async {
             self.runLoop = CFRunLoopGetCurrent()
-            CFRunLoopAddSource(self.runLoop, source, kCFRunLoopCommonModes)
+            CFRunLoopAddSource(self.runLoop, source, CFRunLoopMode.commonModes)
             CFRunLoopRun()
         }
     }
 
-    private func keyCaptureEventTapPortWithCallback(callback: EventTapCallback) -> CFMachPortRef? {
+    fileprivate func keyCaptureEventTapPortWithCallback(_ callback: EventTapCallback) -> CFMachPort? {
         let cCallback: CGEventTapCallBack = { proxy, type, event, refcon in
-            let innerBlock = unsafeBitCast(refcon, EventTapCallback.self)
+            let innerBlock = unsafeBitCast(refcon, to: EventTapCallback.self)
             return innerBlock(type, event).map(Unmanaged.passUnretained)
         }
 
-        let refcon = unsafeBitCast(callback, UnsafeMutablePointer<Void>.self)
+        let refcon = unsafeBitCast(callback, to: UnsafeMutableRawPointer.self)
 
-        return CGEventTapCreate(
-            .CGSessionEventTap,
-            .HeadInsertEventTap,
-            .Default,
-            CGEventMask(1 << NX_SYSDEFINED),
-            cCallback,
-            refcon)
+        return CGEvent.tapCreate(
+            tap: .cgSessionEventTap,
+            place: .headInsertEventTap,
+            options: .defaultTap,
+            eventsOfInterest: CGEventMask(1 << NX_SYSDEFINED),
+            callback: cCallback,
+            userInfo: refcon)
     }
 
-    private func isKeyEvent(event: NSEvent) -> Bool {
+    fileprivate func isKeyEvent(_ event: NSEvent) -> Bool {
         return event.subtype.rawValue == 8
     }
 
-    private func extractKeyCode(event: NSEvent) -> Keycode {
+    fileprivate func extractKeyCode(_ event: NSEvent) -> Keycode {
         return Keycode((event.data1 & 0xffff0000) >> 16)
     }
 
-    private func toKeyEvent(event: NSEvent) -> KeyEvent {
+    fileprivate func toKeyEvent(_ event: NSEvent) -> KeyEvent {
         let keycode = extractKeyCode(event)
         let keyFlags = KeyFlags(event.data1 & 0x0000ffff)
         let keyPressed = ((keyFlags & 0xff00) >> 8) == 0xa
@@ -162,7 +162,7 @@ class MediaKeyTapInternals {
         return KeyEvent(keycode: keycode, keyFlags: keyFlags, keyPressed: keyPressed, keyRepeat: keyRepeat)
     }
 
-    private func isMediaKeyEvent(event: NSEvent) -> Bool {
+    fileprivate func isMediaKeyEvent(_ event: NSEvent) -> Bool {
         let keycode = extractKeyCode(event)
         return isKeyEvent(event)
             && [NX_KEYTYPE_PLAY, NX_KEYTYPE_PREVIOUS, NX_KEYTYPE_NEXT, NX_KEYTYPE_FAST, NX_KEYTYPE_REWIND].contains(keycode)

@@ -11,7 +11,7 @@
 import Cocoa
 
 protocol MediaApplicationWatcherDelegate {
-    func updateIsActiveMediaApp(active: Bool)
+    func updateIsActiveMediaApp(_ active: Bool)
     func whitelistedAppStarted()
 }
 
@@ -35,51 +35,51 @@ class MediaApplicationWatcher {
     }
 
     func start() {
-        let notificationCenter = NSWorkspace.sharedWorkspace().notificationCenter
+        let notificationCenter = NSWorkspace.shared().notificationCenter
 
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationLaunched),
-                                       name: NSWorkspaceDidLaunchApplicationNotification,
+                                       name: NSNotification.Name.NSWorkspaceDidLaunchApplication,
                                        object: nil)
 
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationActivated),
-                                       name: NSWorkspaceDidActivateApplicationNotification,
+                                       name: NSNotification.Name.NSWorkspaceDidActivateApplication,
                                        object: nil)
 
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationTerminated),
-                                       name: NSWorkspaceDidTerminateApplicationNotification,
+                                       name: NSNotification.Name.NSWorkspaceDidTerminateApplication,
                                        object: nil)
 
         setupDistributedNotifications()
     }
 
     func stop() {
-        NSWorkspace.sharedWorkspace().notificationCenter.removeObserver(self)
+        NSWorkspace.shared().notificationCenter.removeObserver(self)
     }
 
     func setupDistributedNotifications() {
-        let distributedNotificationCenter = NSDistributedNotificationCenter.defaultCenter()
+        let distributedNotificationCenter = DistributedNotificationCenter.default()
 
         // Notify any other apps using this library using a distributed notification
         // deliverImmediately is needed to ensure that backgrounded apps can resign the
         // media tap immediately when new media apps are launched
-        let ownBundleIdentifier = NSBundle.mainBundle().bundleIdentifier
+        let ownBundleIdentifier = Bundle.main.bundleIdentifier
 
-        distributedNotificationCenter.postNotificationName(mediaKeyTapDidStartNotification, object: ownBundleIdentifier, userInfo: nil, deliverImmediately: true)
+        distributedNotificationCenter.postNotificationName(NSNotification.Name(rawValue: mediaKeyTapDidStartNotification), object: ownBundleIdentifier, userInfo: nil, deliverImmediately: true)
 
-        distributedNotificationCenter.addObserverForName(mediaKeyTapDidStartNotification, object: nil, queue: nil) { notification in
+        distributedNotificationCenter.addObserver(forName: NSNotification.Name(rawValue: mediaKeyTapDidStartNotification), object: nil, queue: nil) { notification in
             if let otherBundleIdentifier = notification.object as? String {
                 guard otherBundleIdentifier != ownBundleIdentifier else { return }
                 self.dynamicWhitelist.insert(otherBundleIdentifier)
 
                 // Send a reply so that the sender knows that this app exists
-                distributedNotificationCenter.postNotificationName(self.mediaKeyTapReplyNotification, object: ownBundleIdentifier, userInfo: nil, deliverImmediately: true)
+                distributedNotificationCenter.postNotificationName(NSNotification.Name(rawValue: self.mediaKeyTapReplyNotification), object: ownBundleIdentifier, userInfo: nil, deliverImmediately: true)
             }
         }
 
-        distributedNotificationCenter.addObserverForName(mediaKeyTapReplyNotification, object: nil, queue: nil) { notification in
+        distributedNotificationCenter.addObserver(forName: NSNotification.Name(rawValue: mediaKeyTapReplyNotification), object: nil, queue: nil) { notification in
             if let otherBundleIdentifier = notification.object as? String {
                 guard otherBundleIdentifier != ownBundleIdentifier else { return }
                 self.dynamicWhitelist.insert(otherBundleIdentifier)
@@ -89,36 +89,36 @@ class MediaApplicationWatcher {
 
     // MARK: - Notifications
 
-    @objc private func applicationLaunched(notification: NSNotification) {
-        if let application = notification.userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
-            if inStaticWhitelist(application) && application != NSRunningApplication.currentApplication() {
+    @objc fileprivate func applicationLaunched(_ notification: Notification) {
+        if let application = (notification as NSNotification).userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
+            if inStaticWhitelist(application) && application != NSRunningApplication.current() {
                 delegate?.whitelistedAppStarted()
             }
         }
     }
 
-    @objc private func applicationActivated(notification: NSNotification) {
-        if let application = notification.userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
+    @objc fileprivate func applicationActivated(_ notification: Notification) {
+        if let application = (notification as NSNotification).userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
             guard whitelisted(application) else { return }
 
             mediaApps = mediaApps.filter { $0 != application }
-            mediaApps.insert(application, atIndex: 0)
+            mediaApps.insert(application, at: 0)
             updateKeyInterceptStatus()
         }
     }
 
-    @objc private func applicationTerminated(notification: NSNotification) {
-        if let application = notification.userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
+    @objc fileprivate func applicationTerminated(_ notification: Notification) {
+        if let application = (notification as NSNotification).userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
             mediaApps = mediaApps.filter { $0 != application }
             updateKeyInterceptStatus()
         }
     }
 
-    private func updateKeyInterceptStatus() {
+    fileprivate func updateKeyInterceptStatus() {
         guard mediaApps.count > 0 else { return }
 
         let activeApp = mediaApps.first!
-        let ownApp = NSRunningApplication.currentApplication()
+        let ownApp = NSRunningApplication.current()
 
         delegate?.updateIsActiveMediaApp(activeApp == ownApp)
     }
@@ -162,22 +162,22 @@ class MediaApplicationWatcher {
             "ru.ya.themblsha.YandexMusic"
         ]
 
-        if let ownIdentifier = NSBundle.mainBundle().bundleIdentifier {
+        if let ownIdentifier = Bundle.main.bundleIdentifier {
             whitelist.insert(ownIdentifier)
         }
 
         return whitelist
     }
 
-    private func inStaticWhitelist(application: NSRunningApplication) -> Bool {
+    fileprivate func inStaticWhitelist(_ application: NSRunningApplication) -> Bool {
         return (whitelistedApplicationIdentifiers().contains <^> application.bundleIdentifier) ?? false
     }
 
-    private func inDynamicWhitelist(application: NSRunningApplication) -> Bool {
+    fileprivate func inDynamicWhitelist(_ application: NSRunningApplication) -> Bool {
         return (dynamicWhitelist.contains <^> application.bundleIdentifier) ?? false
     }
 
-    private func whitelisted(application: NSRunningApplication) -> Bool {
+    fileprivate func whitelisted(_ application: NSRunningApplication) -> Bool {
         return inStaticWhitelist(application) || inDynamicWhitelist(application)
     }
 }

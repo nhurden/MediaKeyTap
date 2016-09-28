@@ -13,6 +13,6 @@ infix operator <^> {
     associativity left
 }
 
-func <^><T, U>(f: T -> U, ap: T?) -> U? {
+func <^><T, U>(f: (T) -> U, ap: T?) -> U? {
     return ap.map(f)
 }
