@@ -84,7 +84,7 @@ public class MediaKeyTap {
         }
     }
 
-    fileprivate func shouldNotifyDelegate(_ event: KeyEvent) -> Bool {
+    fileprivate func shouldNotifyDelegate(ofEvent event: KeyEvent) -> Bool {
         switch keyPressMode {
         case .keyDown:
             return event.keyPressed
@@ -120,7 +120,7 @@ extension MediaKeyTap: MediaKeyTapInternalsDelegate {
 
     func handle(keyEvent: KeyEvent) {
         if let key = keycodeToMediaKey(keyEvent.keycode) {
-            if shouldNotifyDelegate(keyEvent) {
+            if shouldNotifyDelegate(ofEvent: keyEvent) {
                 delegate.handle(mediaKey: key, event: keyEvent)
             }
         }

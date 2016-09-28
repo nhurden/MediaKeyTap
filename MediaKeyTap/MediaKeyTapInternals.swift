@@ -76,10 +76,10 @@ class MediaKeyTapInternals {
                 return event
             }
 
-            return self.handleEvent(event, ofType: type)
+            return self.handle(event: event, ofType: type)
         }
 
-        try startKeyEventTapWithCallback(eventTapCallback, restart: restart)
+        try startKeyEventTap(callback: eventTapCallback, restart: restart)
         callback = eventTapCallback
     }
 
@@ -89,7 +89,7 @@ class MediaKeyTapInternals {
         CFMachPortInvalidate <^> keyEventPort
     }
 
-    fileprivate func handleEvent(_ event: CGEvent, ofType type: CGEventType) -> CGEvent? {
+    fileprivate func handle(event: CGEvent, ofType type: CGEventType) -> CGEvent? {
         if let nsEvent = NSEvent(cgEvent: event) {
             guard type.rawValue == UInt32(NX_SYSDEFINED)
                 && isMediaKeyEvent(nsEvent)
@@ -106,13 +106,13 @@ class MediaKeyTapInternals {
         return event
     }
 
-    fileprivate func startKeyEventTapWithCallback(_ callback: EventTapCallback, restart: Bool) throws {
+    fileprivate func startKeyEventTap(callback: EventTapCallback, restart: Bool) throws {
         // On a restart we don't want to interfere with the application watcher
         if !restart {
             delegate?.updateInterceptMediaKeys(true)
         }
 
-        keyEventPort = keyCaptureEventTapPortWithCallback(callback)
+        keyEventPort = keyCaptureEventTapPort(callback: callback)
         guard let port = keyEventPort else { throw EventTapError.eventTapCreationFailure }
 
         runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorSystemDefault, port, 0)
@@ -128,7 +128,7 @@ class MediaKeyTapInternals {
         }
     }
 
-    fileprivate func keyCaptureEventTapPortWithCallback(_ callback: EventTapCallback) -> CFMachPort? {
+    fileprivate func keyCaptureEventTapPort(callback: EventTapCallback) -> CFMachPort? {
         let cCallback: CGEventTapCallBack = { proxy, type, event, refcon in
             let innerBlock = unsafeBitCast(refcon, to: EventTapCallback.self)
             return innerBlock(type, event).map(Unmanaged.passUnretained)
