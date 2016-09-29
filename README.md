@@ -45,9 +45,9 @@ You can also access the `KeyEvent` to access the event's underlying `keycode`, `
 
 The MediaKeyTap initialiser allows the keypress behaviour to be specified:
 ```swift
-    MediaKeyTap(delegate: self, on: .KeyDown) // Default
-    MediaKeyTap(delegate: self, on: .KeyUp)
-    MediaKeyTap(delegate: self, on: .KeyDownAndUp)
+    MediaKeyTap(delegate: self, on: .keyDown) // Default
+    MediaKeyTap(delegate: self, on: .keyUp)
+    MediaKeyTap(delegate: self, on: .keyDownAndUp)
 ```
 
 ## Requirements
