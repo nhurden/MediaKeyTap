@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var mediaKeyTap: MediaKeyTap?
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(aNotification: Notification) {
         mediaKeyTap = MediaKeyTap(delegate: self)
         mediaKeyTap?.start()
     }
