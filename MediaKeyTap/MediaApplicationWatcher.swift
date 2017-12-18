@@ -89,7 +89,7 @@ class MediaApplicationWatcher {
 
     // MARK: - Notifications
 
-    @objc fileprivate func applicationLaunched(_ notification: Notification) {
+    @objc private func applicationLaunched(_ notification: Notification) {
         if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
             if inStaticWhitelist(application) && application != NSRunningApplication.current {
                 delegate?.whitelistedAppStarted()
@@ -97,7 +97,7 @@ class MediaApplicationWatcher {
         }
     }
 
-    @objc fileprivate func applicationActivated(_ notification: Notification) {
+    @objc private func applicationActivated(_ notification: Notification) {
         if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
             guard whitelisted(application) else { return }
 
@@ -107,14 +107,14 @@ class MediaApplicationWatcher {
         }
     }
 
-    @objc fileprivate func applicationTerminated(_ notification: Notification) {
+    @objc private func applicationTerminated(_ notification: Notification) {
         if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
             mediaApps = mediaApps.filter { $0 != application }
             updateKeyInterceptStatus()
         }
     }
 
-    fileprivate func updateKeyInterceptStatus() {
+    private func updateKeyInterceptStatus() {
         guard mediaApps.count > 0 else { return }
 
         let activeApp = mediaApps.first!
@@ -169,15 +169,15 @@ class MediaApplicationWatcher {
         return whitelist
     }
 
-    fileprivate func inStaticWhitelist(_ application: NSRunningApplication) -> Bool {
+    private func inStaticWhitelist(_ application: NSRunningApplication) -> Bool {
         return (whitelistedApplicationIdentifiers().contains <^> application.bundleIdentifier) ?? false
     }
 
-    fileprivate func inDynamicWhitelist(_ application: NSRunningApplication) -> Bool {
+    private func inDynamicWhitelist(_ application: NSRunningApplication) -> Bool {
         return (dynamicWhitelist.contains <^> application.bundleIdentifier) ?? false
     }
 
-    fileprivate func whitelisted(_ application: NSRunningApplication) -> Bool {
+    private func whitelisted(_ application: NSRunningApplication) -> Bool {
         return inStaticWhitelist(application) || inDynamicWhitelist(application)
     }
 }

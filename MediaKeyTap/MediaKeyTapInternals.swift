@@ -89,7 +89,7 @@ class MediaKeyTapInternals {
         CFMachPortInvalidate <^> keyEventPort
     }
 
-    fileprivate func handle(event: CGEvent, ofType type: CGEventType) -> CGEvent? {
+    private func handle(event: CGEvent, ofType type: CGEventType) -> CGEvent? {
         if let nsEvent = NSEvent(cgEvent: event) {
             guard type.rawValue == UInt32(NX_SYSDEFINED)
                 && nsEvent.isMediaKeyEvent
@@ -106,7 +106,7 @@ class MediaKeyTapInternals {
         return event
     }
 
-    fileprivate func startKeyEventTap(callback: EventTapCallback, restart: Bool) throws {
+    private func startKeyEventTap(callback: EventTapCallback, restart: Bool) throws {
         // On a restart we don't want to interfere with the application watcher
         if !restart {
             delegate?.updateInterceptMediaKeys(true)
@@ -128,7 +128,7 @@ class MediaKeyTapInternals {
         }
     }
 
-    fileprivate func keyCaptureEventTapPort(callback: EventTapCallback) -> CFMachPort? {
+    private func keyCaptureEventTapPort(callback: EventTapCallback) -> CFMachPort? {
         let cCallback: CGEventTapCallBack = { proxy, type, event, refcon in
             let innerBlock = unsafeBitCast(refcon, to: EventTapCallback.self)
             return innerBlock(type, event).map(Unmanaged.passUnretained)

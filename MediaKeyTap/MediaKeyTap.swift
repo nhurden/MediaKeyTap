@@ -73,7 +73,7 @@ public class MediaKeyTap {
         } catch {}
     }
 
-    fileprivate func keycodeToMediaKey(_ keycode: Keycode) -> MediaKey? {
+    private func keycodeToMediaKey(_ keycode: Keycode) -> MediaKey? {
         switch keycode {
         case NX_KEYTYPE_PLAY: return .playPause
         case NX_KEYTYPE_PREVIOUS: return .previous
@@ -84,7 +84,7 @@ public class MediaKeyTap {
         }
     }
 
-    fileprivate func shouldNotifyDelegate(ofEvent event: KeyEvent) -> Bool {
+    private func shouldNotifyDelegate(ofEvent event: KeyEvent) -> Bool {
         switch keyPressMode {
         case .keyDown:
             return event.keyPressed
