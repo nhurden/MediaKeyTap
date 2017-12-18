@@ -35,28 +35,28 @@ class MediaApplicationWatcher {
     }
 
     func start() {
-        let notificationCenter = NSWorkspace.shared().notificationCenter
+        let notificationCenter = NSWorkspace.shared.notificationCenter
 
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationLaunched),
-                                       name: NSNotification.Name.NSWorkspaceDidLaunchApplication,
+                                       name: NSWorkspace.didLaunchApplicationNotification,
                                        object: nil)
 
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationActivated),
-                                       name: NSNotification.Name.NSWorkspaceDidActivateApplication,
+                                       name: NSWorkspace.didActivateApplicationNotification,
                                        object: nil)
 
         notificationCenter.addObserver(self,
                                        selector: #selector(applicationTerminated),
-                                       name: NSNotification.Name.NSWorkspaceDidTerminateApplication,
+                                       name: NSWorkspace.didTerminateApplicationNotification,
                                        object: nil)
 
         setupDistributedNotifications()
     }
 
     func stop() {
-        NSWorkspace.shared().notificationCenter.removeObserver(self)
+        NSWorkspace.shared.notificationCenter.removeObserver(self)
     }
 
     func setupDistributedNotifications() {
@@ -90,15 +90,15 @@ class MediaApplicationWatcher {
     // MARK: - Notifications
 
     @objc fileprivate func applicationLaunched(_ notification: Notification) {
-        if let application = (notification as NSNotification).userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
-            if inStaticWhitelist(application) && application != NSRunningApplication.current() {
+        if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
+            if inStaticWhitelist(application) && application != NSRunningApplication.current {
                 delegate?.whitelistedAppStarted()
             }
         }
     }
 
     @objc fileprivate func applicationActivated(_ notification: Notification) {
-        if let application = (notification as NSNotification).userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
+        if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
             guard whitelisted(application) else { return }
 
             mediaApps = mediaApps.filter { $0 != application }
@@ -108,7 +108,7 @@ class MediaApplicationWatcher {
     }
 
     @objc fileprivate func applicationTerminated(_ notification: Notification) {
-        if let application = (notification as NSNotification).userInfo?[NSWorkspaceApplicationKey] as? NSRunningApplication {
+        if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
             mediaApps = mediaApps.filter { $0 != application }
             updateKeyInterceptStatus()
         }
@@ -118,7 +118,7 @@ class MediaApplicationWatcher {
         guard mediaApps.count > 0 else { return }
 
         let activeApp = mediaApps.first!
-        let ownApp = NSRunningApplication.current()
+        let ownApp = NSRunningApplication.current
 
         delegate?.updateIsActiveMediaApp(activeApp == ownApp)
     }
