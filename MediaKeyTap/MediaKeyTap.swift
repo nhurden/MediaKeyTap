@@ -60,6 +60,12 @@ public class MediaKeyTap {
         self.keyPressMode = mode
     }
 
+    /// Activate the currently running application
+    open func activate() {
+        mediaApplicationWatcher.activate()
+    }
+
+    /// Start the key tap
     open func start() {
         mediaApplicationWatcher.delegate = self
         mediaApplicationWatcher.start()

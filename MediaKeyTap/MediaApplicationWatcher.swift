@@ -34,6 +34,11 @@ class MediaApplicationWatcher {
         stop()
     }
 
+    /// Activate the currently running application (without an NSNotification)
+    func activate() {
+        handleApplicationActivation(application: NSRunningApplication.current)
+    }
+
     func start() {
         let notificationCenter = NSWorkspace.shared.notificationCenter
 
@@ -100,10 +105,7 @@ class MediaApplicationWatcher {
     @objc private func applicationActivated(_ notification: Notification) {
         if let application = (notification as NSNotification).userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
             guard whitelisted(application) else { return }
-
-            mediaApps = mediaApps.filter { $0 != application }
-            mediaApps.insert(application, at: 0)
-            updateKeyInterceptStatus()
+            handleApplicationActivation(application: application)
         }
     }
 
@@ -112,6 +114,13 @@ class MediaApplicationWatcher {
             mediaApps = mediaApps.filter { $0 != application }
             updateKeyInterceptStatus()
         }
+    }
+
+    // When activated, move `application` to the front of `mediaApps` and toggle the tap as necessary
+    private func handleApplicationActivation(application: NSRunningApplication) {
+        mediaApps = mediaApps.filter { $0 != application }
+        mediaApps.insert(application, at: 0)
+        updateKeyInterceptStatus()
     }
 
     private func updateKeyInterceptStatus() {
