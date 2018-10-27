@@ -50,7 +50,7 @@ class MediaKeyTapInternals {
     */
     func enableTap(_ onOff: Bool) {
         if let port = self.keyEventPort, let runLoop = self.runLoop {
-            CFRunLoopPerformBlock(runLoop, CFRunLoopMode.commonModes as CFTypeRef!) {
+            CFRunLoopPerformBlock(runLoop, CFRunLoopMode.commonModes as CFTypeRef) {
                 CGEvent.tapEnable(tap: port, enable: onOff)
             }
             CFRunLoopWakeUp(runLoop)
@@ -106,7 +106,7 @@ class MediaKeyTapInternals {
         return event
     }
 
-    private func startKeyEventTap(callback: EventTapCallback, restart: Bool) throws {
+    private func startKeyEventTap(callback: @escaping EventTapCallback, restart: Bool) throws {
         // On a restart we don't want to interfere with the application watcher
         if !restart {
             delegate?.updateInterceptMediaKeys(true)
@@ -128,7 +128,7 @@ class MediaKeyTapInternals {
         }
     }
 
-    private func keyCaptureEventTapPort(callback: EventTapCallback) -> CFMachPort? {
+    private func keyCaptureEventTapPort(callback: @escaping EventTapCallback) -> CFMachPort? {
         let cCallback: CGEventTapCallBack = { proxy, type, event, refcon in
             let innerBlock = unsafeBitCast(refcon, to: EventTapCallback.self)
             return innerBlock(type, event).map(Unmanaged.passUnretained)
