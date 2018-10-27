@@ -1,3 +1,6 @@
+# 2.2.0 - 2018-10-27
+- Mark callbacks as @escaping after https://github.com/apple/swift-evolution/blob/master/proposals/0103-make-noescape-default.md
+
 # 2.1.0 - 2017-12-24
 - Add manual activation function to allow for the current application to be activated without receiving an NSNotification.
 
