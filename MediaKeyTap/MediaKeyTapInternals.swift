@@ -76,7 +76,9 @@ class MediaKeyTapInternals {
                 return event
             }
 
-            return self.handle(event: event, ofType: type)
+            return DispatchQueue.main.sync {
+                return self.handle(event: event, ofType: type)
+            }
         }
 
         try startKeyEventTap(callback: eventTapCallback, restart: restart)
@@ -96,9 +98,7 @@ class MediaKeyTapInternals {
                 && delegate?.isInterceptingMediaKeys() ?? false
             else { return event }
 
-            DispatchQueue.main.async {
-                self.delegate?.handle(keyEvent: nsEvent.keyEvent)
-            }
+            self.delegate?.handle(keyEvent: nsEvent.keyEvent)
 
             return nil
         }
