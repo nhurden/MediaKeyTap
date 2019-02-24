@@ -1,3 +1,6 @@
+# 2.2.1 - 2019-02-24
+- Avoid TIS/TSM error due to creation of NSEvents on a background thread.
+
 # 2.2.0 - 2018-10-27
 - Mark callbacks as @escaping after https://github.com/apple/swift-evolution/blob/master/proposals/0103-make-noescape-default.md
 
