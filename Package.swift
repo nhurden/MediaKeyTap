@@ -4,10 +4,10 @@ import PackageDescription
 
 let package = Package(
     name: "MediaKeyTap",
+    products: [
+        .library(name: "MediaKeyTap", targets: ["MediaKeyTap"]),
+    ],
     targets: [
-        .target(
-            name: "MediaKeyTap",
-            path: "MediaKeyTap"
-        ),
+        .target(name: "MediaKeyTap", path: "MediaKeyTap"),
     ]
 )
