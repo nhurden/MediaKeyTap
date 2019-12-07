@@ -64,7 +64,15 @@ public class MediaKeyTap {
     open func activate() {
         mediaApplicationWatcher.activate()
     }
-
+    
+    /// Stop the key tap
+    open func stop() {
+        mediaApplicationWatcher.stop()
+        internals.stopWatchingMediaKeys()
+        mediaApplicationWatcher.delegate = nil
+        internals.delegate = nil
+    }
+    
     /// Start the key tap
     open func start() {
         mediaApplicationWatcher.delegate = self
