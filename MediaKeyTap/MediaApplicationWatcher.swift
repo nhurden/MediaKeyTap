@@ -144,6 +144,7 @@ class MediaApplicationWatcher {
             "com.apple.QuickTimePlayerX",
             "com.apple.iPhoto",
             "com.apple.iTunes",
+            "com.apple.Music",
             "com.apple.iWork.Keynote",
             "com.apple.quicktimeplayer",
             "com.beardedspice.BeardedSpice",
