@@ -1,3 +1,8 @@
+# 2.3.0 - 2021-06-13
+- Add Apple Music identifier to whitelist
+- Add Package.swift
+- Add function to stop the MediaKeyTap
+
 # 2.2.1 - 2019-02-24
 - Avoid TIS/TSM error due to creation of NSEvents on a background thread.
 

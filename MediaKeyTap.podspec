@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "MediaKeyTap"
-  s.version          = "2.2.1"
+  s.version          = "2.3.0"
   s.summary          = "Access the Mac's media keys in Swift"
   s.homepage         = "https://github.com/nhurden/MediaKeyTap"
   s.license          = { type: 'MIT', file: 'LICENSE' }
