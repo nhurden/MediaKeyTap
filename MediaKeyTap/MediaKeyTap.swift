@@ -32,12 +32,12 @@ public struct KeyEvent {
     public let keyRepeat: Bool
 }
 
-public protocol MediaKeyTapDelegate {
+public protocol MediaKeyTapDelegate: AnyObject {
     func handle(mediaKey: MediaKey, event: KeyEvent)
 }
 
 public class MediaKeyTap {
-    let delegate: MediaKeyTapDelegate
+    weak var delegate: MediaKeyTapDelegate?
     let mediaApplicationWatcher: MediaApplicationWatcher
     let internals: MediaKeyTapInternals
     let keyPressMode: KeyPressMode
@@ -135,7 +135,7 @@ extension MediaKeyTap: MediaKeyTapInternalsDelegate {
     func handle(keyEvent: KeyEvent) {
         if let key = keycodeToMediaKey(keyEvent.keycode) {
             if shouldNotifyDelegate(ofEvent: keyEvent) {
-                delegate.handle(mediaKey: key, event: keyEvent)
+                delegate?.handle(mediaKey: key, event: keyEvent)
             }
         }
     }

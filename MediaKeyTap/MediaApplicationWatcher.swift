@@ -10,14 +10,14 @@
 
 import Cocoa
 
-protocol MediaApplicationWatcherDelegate {
+protocol MediaApplicationWatcherDelegate: AnyObject {
     func updateIsActiveMediaApp(_ active: Bool)
     func whitelistedAppStarted()
 }
 
 class MediaApplicationWatcher {
     var mediaApps: [NSRunningApplication]
-    var delegate: MediaApplicationWatcherDelegate?
+    weak var delegate: MediaApplicationWatcherDelegate?
 
     // A set of bundle identifiers that notifications have been received from
     var dynamicWhitelist: Set<String>
