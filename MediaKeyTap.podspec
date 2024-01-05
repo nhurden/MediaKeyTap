@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author           = { "Nicholas Hurden" => "git@nhurden.com" }
   s.source           = { git: "https://github.com/nhurden/MediaKeyTap.git", tag: s.version.to_s }
 
-  s.swift_version = '4.0'
+  s.swift_version = '5.0'
 
   s.platform     = :osx, '10.10'
   s.requires_arc = true
